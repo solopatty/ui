@@ -4,26 +4,30 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Wrapper } from "./Wrapper";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
+import { motion } from "framer-motion";
 const Header = () => {
   const pathname = usePathname();
   
   return (
-    <header className="bg-gradient-to-r from-[#F6411B]/5 to-blue-500/5 backdrop-blur-sm border-b border-[#F6411B]/10 sticky top-0 z-50">
+    <header className="bg-gradient-to-r from-[#F6411B]/5 to-yellow-500/5 backdrop-blur-sm sticky top-0 z-50">
       <Wrapper>
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center px-24 justify-between h-16">
           <Link 
             href="/" 
-            className={`text-xl font-bold ${
+            className={`text-2xl font-bold ${
                 pathname === "/swap" 
                   ? "bg-black" 
                   : "bg-[#F6411B] hover:text-[#F6411B] hover:bg-[#F6411B]/5"
               } bg-clip-text text-transparent hover:opacity-80 transition-opacity flex items-center gap-2`}
           >
-            <img
+            <motion.img
               src="/patty.png"
               alt="Patty"
-              className={`w-6 h-6 $`}
+              className={`w-6 h-6 ${
+                pathname === "/swap" 
+                  ? "bg-black" 
+                  : "bg-[#F6411B] hover:text-[#F6411B] hover:bg-[#F6411B]/5"
+              } bg-clip-text text-transparent hover:opacity-80 transition-opacity flex items-center gap-2`}
             />
             SoloPatty
           </Link>
