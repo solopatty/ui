@@ -33,6 +33,17 @@ export default function SwapInterface() {
   const handleSwap = () => {
     if (!isConnected) return;
     
+    // Swap currencies and amounts
+    setFromCurrency(toCurrency);
+    setToCurrency(fromCurrency);
+    setFromAmount(toAmount);
+    setToAmount(fromAmount);
+   
+  };
+
+  const handleMainSwap = () => {
+    if (!isConnected) return;
+    
     // Start the swap process
     setSwapStage('depositing');
     
@@ -337,7 +348,7 @@ export default function SwapInterface() {
         {/* Connect Wallet Button */}
         <button 
           className={getButtonClassName()}
-          onClick={swapStage === 'claimable' ? handleClaim : handleSwap}
+          onClick={swapStage === 'claimable' ? handleClaim : handleMainSwap}
           disabled={getButtonDisabled()}
         >
           {getButtonText()}

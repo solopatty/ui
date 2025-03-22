@@ -1,10 +1,12 @@
 import { Wrapper } from "@/components/Wrapper";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { FloatingFood } from "@/components/FloatingFood";
 
 const Home = () => {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-white via-orange-50 to-orange-200">
+    <main className="min-h-screen bg-gradient-to-br from-white via-orange-50 to-orange-200 relative">
+      <FloatingFood />
       <Wrapper>
         <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] w-full px-4">
           {/* Hero Section */}
@@ -69,26 +71,6 @@ const Home = () => {
               </div>
               <h3 className="text-xl font-semibold text-[#F6411B] mb-2">Fair Pricing</h3>
               <p className="text-gray-600">Transparent and fair pricing mechanism for all traders.</p>
-            </div>
-          </div>
-
-          {/* Stats Section */}
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 w-full max-w-4xl mx-auto px-4">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-[#F6411B] mb-1">$1.2M+</div>
-              <div className="text-gray-600">Total Volume</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-[#F6411B] mb-1">10K+</div>
-              <div className="text-gray-600">Active Users</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-[#F6411B] mb-1">99.9%</div>
-              <div className="text-gray-600">Uptime</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-[#F6411B] mb-1">0</div>
-              <div className="text-gray-600">Front-Run Attacks</div>
             </div>
           </div>
         </div>

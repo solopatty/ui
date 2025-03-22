@@ -89,10 +89,67 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        float: {
+          '0%, 100%': { 
+            transform: 'translate(0, 0) rotate(0deg) scale(1)',
+            filter: 'brightness(1)'
+          },
+          '25%': { 
+            transform: 'translate(15px, 15px) rotate(8deg) scale(1.05)',
+            filter: 'brightness(1.1)'
+          },
+          '50%': { 
+            transform: 'translate(0, 30px) rotate(0deg) scale(1)',
+            filter: 'brightness(1)'
+          },
+          '75%': { 
+            transform: 'translate(-15px, 15px) rotate(-8deg) scale(0.95)',
+            filter: 'brightness(0.9)'
+          },
+        },
+        float2: {
+          '0%, 100%': { 
+            transform: 'translate(0, 0) rotate(0deg) scale(1)',
+            filter: 'brightness(1)'
+          },
+          '25%': { 
+            transform: 'translate(-15px, 20px) rotate(-5deg) scale(1.1)',
+            filter: 'brightness(1.1)'
+          },
+          '50%': { 
+            transform: 'translate(0, 40px) rotate(0deg) scale(1)',
+            filter: 'brightness(1)'
+          },
+          '75%': { 
+            transform: 'translate(15px, 20px) rotate(5deg) scale(0.9)',
+            filter: 'brightness(0.9)'
+          },
+        },
+        float3: {
+          '0%, 100%': { 
+            transform: 'translate(0, 0) rotate(0deg) scale(1)',
+            filter: 'brightness(1)'
+          },
+          '25%': { 
+            transform: 'translate(20px, 10px) rotate(10deg) scale(1.15)',
+            filter: 'brightness(1.1)'
+          },
+          '50%': { 
+            transform: 'translate(0, 20px) rotate(0deg) scale(1)',
+            filter: 'brightness(1)'
+          },
+          '75%': { 
+            transform: 'translate(-20px, 10px) rotate(-10deg) scale(0.85)',
+            filter: 'brightness(0.9)'
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        float: 'float 15s ease-in-out infinite',
+        float2: 'float2 18s ease-in-out infinite',
+        float3: 'float3 20s ease-in-out infinite',
       },
     },
   },
