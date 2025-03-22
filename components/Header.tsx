@@ -14,8 +14,17 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           <Link 
             href="/" 
-            className="text-xl font-bold bg-[#F6411B]  bg-clip-text text-transparent hover:opacity-80 transition-opacity"
+            className={`text-xl font-bold ${
+                pathname === "/swap" 
+                  ? "bg-black" 
+                  : "bg-[#F6411B] hover:text-[#F6411B] hover:bg-[#F6411B]/5"
+              } bg-clip-text text-transparent hover:opacity-80 transition-opacity flex items-center gap-2`}
           >
+            <img
+              src="/patty.png"
+              alt="Patty"
+              className={`w-6 h-6 $`}
+            />
             SoloPatty
           </Link>
           <div className="flex items-center gap-8">

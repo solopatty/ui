@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { ChevronDown, ArrowDown, Check } from "lucide-react";
-import { Switch } from "@/components/ui/switch";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount } from "wagmi";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
@@ -23,18 +24,73 @@ export default function SwapInterface() {
   const [maxDurationValue, setMaxDurationValue] = useState("4");
   const [marketRate, setMarketRate] = useState(0);
   const [loading, setLoading] = useState(false);
+  const { isConnected } = useAccount();
+  const [swapStage, setSwapStage] = useState<'idle' | 'depositing' | 'matching' | 'claiming' | 'claimable'>('idle');
 
-  const currencies = ["Patty", "Cheese"];
+  const currencies = ["Patty", "Cheese", "Lettuce"];
   const timeUnits = ["Min", "Hour", "Day"];
 
   const handleSwap = () => {
-    // Swap currencies
-    setFromCurrency(toCurrency);
-    setToCurrency(fromCurrency);
+    if (!isConnected) return;
     
-    // Swap amounts
-    setFromAmount(toAmount);
-    setToAmount(fromAmount);
+    // Start the swap process
+    setSwapStage('depositing');
+    
+    // Simulate the swap process
+    setTimeout(() => {
+      setSwapStage('matching');
+      setTimeout(() => {
+        setSwapStage('claimable');
+      }, 2000);
+    }, 2000);
+  };
+
+  const handleClaim = () => {
+    if (swapStage === 'claimable') {
+      // Simulate claiming process
+      setSwapStage('claiming');
+      setTimeout(() => {
+        setSwapStage('idle');
+      }, 2000);
+    }
+  };
+
+  const getButtonText = () => {
+    if (!isConnected) return "Connect Wallet";
+    switch (swapStage) {
+      case 'depositing':
+        return "Depositing...";
+      case 'matching':
+        return "Matching...";
+      case 'claiming':
+        return "Claiming...";
+      case 'claimable':
+        return "Claim Now";
+      default:
+        return "Swap";
+    }
+  };
+
+  const getButtonDisabled = () => {
+    return !isConnected || (swapStage !== 'idle' && swapStage !== 'claimable');
+  };
+
+  const getButtonClassName = () => {
+    const baseClasses = "w-full text-white font-bold py-4 px-6 rounded-xl mt-4 transition-colors";
+    if (!isConnected) {
+      return `${baseClasses} bg-[#F6411B] hover:bg-[#F6411B]/90`;
+    }
+    
+    switch (swapStage) {
+      case 'claimable':
+        return `${baseClasses} bg-green-500 hover:bg-green-600`;
+      case 'depositing':
+      case 'matching':
+      case 'claiming':
+        return `${baseClasses} bg-[#F6411B] opacity-50 cursor-not-allowed`;
+      default:
+        return `${baseClasses} bg-[#F6411B] hover:bg-[#F6411B]/90`;
+    }
   };
 
   const getMarketRate = async () => {
@@ -78,11 +134,19 @@ export default function SwapInterface() {
           className={`w-6 h-6`}
         />
       );
-    } else {
+    } else if (currency === "Cheese") {
       return (
         <img
           src="/cheese.svg"
           alt="Cheese"
+          className={`w-6 h-6`}
+        />
+      );
+    } else {
+      return (
+        <img
+          src="/lettuce.svg"
+          alt="Lettuce"
           className={`w-6 h-6`}
         />
       );
@@ -108,7 +172,7 @@ export default function SwapInterface() {
                   {fromCurrency}
                   <ChevronDown className="ml-1 h-5 w-5 text-[#F6411B]/70" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-[#F6411B]/10 text-[#F6411B] border-[#F6411B]/20">
+                <DropdownMenuContent className="bg-white/90 text-[#F6411B] border-[#F6411B]/20">
                   {currencies.map((currency) => (
                     <DropdownMenuItem
                       key={currency}
@@ -116,7 +180,12 @@ export default function SwapInterface() {
                       onClick={() => setFromCurrency(currency)}
                     >
                       <div className="flex items-center justify-between w-full">
-                        {currency}
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 flex items-center justify-center">
+                            {getTokenLogo(currency)}
+                          </div>
+                          {currency}
+                        </div>
                         {currency === fromCurrency && (
                           <Check className="h-4 w-4 ml-2" />
                         )}
@@ -160,7 +229,7 @@ export default function SwapInterface() {
                   {toCurrency}
                   <ChevronDown className="ml-1 h-5 w-5 text-[#F6411B]/70" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-[#F6411B]/10 text-[#F6411B] border-[#F6411B]/20">
+                <DropdownMenuContent className="bg-white/90 text-[#F6411B] border-[#F6411B]/20">
                   {currencies.map((currency) => (
                     <DropdownMenuItem
                       key={currency}
@@ -168,7 +237,12 @@ export default function SwapInterface() {
                       onClick={() => setToCurrency(currency)}
                     >
                       <div className="flex items-center justify-between w-full">
-                        {currency}
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 flex items-center justify-center">
+                            {getTokenLogo(currency)}
+                          </div>
+                          {currency}
+                        </div>
                         {currency === toCurrency && (
                           <Check className="h-4 w-4 ml-2" />
                         )}
@@ -213,7 +287,7 @@ export default function SwapInterface() {
           <div className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 rounded-r-xl p-4 flex-1 border border-[#F6411B]/20 border-l-0">
             <span className="text-[#F6411B] block">Min Amount</span>
             <span className="text-[#F6411B] text-xl font-bold">
-              {(parseFloat(toAmount) * (1 - (Math.random() * 0.02 + 0.03))).toFixed(2)}
+              {(parseFloat(toAmount) * (1 - (Math.random() * 0.007 + 0.004))).toFixed(2)}
             </span>
           </div>
         </div>
@@ -261,8 +335,12 @@ export default function SwapInterface() {
         </div>
 
         {/* Connect Wallet Button */}
-        <button className="w-full bg-[#F6411B] hover:bg-[#F6411B]/90 text-white font-bold py-4 px-6 rounded-xl mt-6 transition-colors">
-          Connect Wallet
+        <button 
+          className={getButtonClassName()}
+          onClick={swapStage === 'claimable' ? handleClaim : handleSwap}
+          disabled={getButtonDisabled()}
+        >
+          {getButtonText()}
         </button>
       </div>
     </div>
