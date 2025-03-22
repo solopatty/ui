@@ -192,8 +192,8 @@ export default function SwapInterface() {
             </div>
           </div>
           <div className="bg-input rounded-r-xl p-4 flex-1 border-l border-background">
-            <span className="text-card-foreground/70 block">Gain</span>
-            <span className="text-white text-xl font-bold">0.0%</span>
+            <span className="text-card-foreground/70 block">Min Amount</span>
+            <span className="text-white text-xl font-bold">{(parseFloat(toAmount) - 0.3).toFixed(2)}</span>
           </div>
         </div>
       </div>
@@ -252,80 +252,6 @@ export default function SwapInterface() {
           <div className="flex justify-between mt-1">
             <span className="text-card-foreground/70">Size Per Trade:</span>
             <span className="text-white">0 BNB</span>
-          </div>
-        </div>
-
-        {/* Trade Interval and Max Duration */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-input rounded-xl p-4">
-            <span className="text-card-foreground/70 block text-sm">
-              Trade Interval
-            </span>
-            <div className="flex items-center justify-between mt-1">
-              <Input
-                type="number"
-                value={tradeIntervalValue}
-                onChange={(e) => setTradeIntervalValue(e.target.value)}
-                className="bg-transparent border-none text-white text-2xl font-bold w-12 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-              />
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center text-white focus:outline-none">
-                  <span className="text-white mr-1">{tradeInterval}</span>
-                  <ChevronDown className="h-5 w-5 text-white/70" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-input text-white border-background">
-                  {timeUnits.map((unit) => (
-                    <DropdownMenuItem
-                      key={unit}
-                      className="focus:bg-background/20 cursor-pointer"
-                      onClick={() => setTradeInterval(unit)}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        {unit}
-                        {unit === tradeInterval && (
-                          <Check className="h-4 w-4 ml-2" />
-                        )}
-                      </div>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-          <div className="bg-input rounded-xl p-4">
-            <span className="text-card-foreground/70 block text-sm">
-              Max Duration
-            </span>
-            <div className="flex items-center justify-between mt-1">
-              <Input
-                type="number"
-                value={maxDurationValue}
-                onChange={(e) => setMaxDurationValue(e.target.value)}
-                className="bg-transparent border-none text-white text-2xl font-bold w-12 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-              />
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center text-white focus:outline-none">
-                  <span className="text-white mr-1">{maxDuration}</span>
-                  <ChevronDown className="h-5 w-5 text-white/70" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-input text-white border-background">
-                  {timeUnits.map((unit) => (
-                    <DropdownMenuItem
-                      key={unit}
-                      className="focus:bg-background/20 cursor-pointer"
-                      onClick={() => setMaxDuration(unit)}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        {unit}
-                        {unit === maxDuration && (
-                          <Check className="h-4 w-4 ml-2" />
-                        )}
-                      </div>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
           </div>
         </div>
 

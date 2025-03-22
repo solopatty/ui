@@ -1,4 +1,4 @@
-function LogEntry({
+export default function LogEntry({
     time,
     type,
     message,
