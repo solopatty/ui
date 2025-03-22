@@ -1,26 +1,30 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ChevronDown, ArrowDown, Check } from "lucide-react"
-import { Switch } from "@/components/ui/switch"
-import { Slider } from "@/components/ui/slider"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-
+import { useState } from "react";
+import { ChevronDown, ArrowDown, Check } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 export default function SwapInterface() {
-  const [limitPrice, setLimitPrice] = useState(false)
-  const [totalTrades, setTotalTrades] = useState(1)
-  const [fromCurrency, setFromCurrency] = useState("BNB")
-  const [toCurrency, setToCurrency] = useState("CAKE")
-  const [fromAmount, setFromAmount] = useState("0.0")
-  const [toAmount, setToAmount] = useState("0.0")
-  const [tradeInterval, setTradeInterval] = useState("Min")
-  const [maxDuration, setMaxDuration] = useState("Min")
-  const [tradeIntervalValue, setTradeIntervalValue] = useState("2")
-  const [maxDurationValue, setMaxDurationValue] = useState("4")
+  const [limitPrice, setLimitPrice] = useState(false);
+  const [totalTrades, setTotalTrades] = useState(1);
+  const [fromCurrency, setFromCurrency] = useState("BNB");
+  const [toCurrency, setToCurrency] = useState("CAKE");
+  const [fromAmount, setFromAmount] = useState("0.0");
+  const [toAmount, setToAmount] = useState("0.0");
+  const [tradeInterval, setTradeInterval] = useState("Min");
+  const [maxDuration, setMaxDuration] = useState("Min");
+  const [tradeIntervalValue, setTradeIntervalValue] = useState("2");
+  const [maxDurationValue, setMaxDurationValue] = useState("4");
 
-  const currencies = ["BNB", "ETH", "USDT", "CAKE", "BTC"]
-  const timeUnits = ["Min", "Hour", "Day"]
+  const currencies = ["BNB", "ETH", "USDT", "CAKE", "BTC"];
+  const timeUnits = ["Min", "Hour", "Day"];
 
   return (
     <div className="max-w-md w-full space-y-4">
@@ -33,8 +37,19 @@ export default function SwapInterface() {
             <div className="flex items-center">
               <div className="bg-yellow-500 rounded-full p-2 mr-2">
                 <div className="w-6 h-6 flex items-center justify-center text-white">
-                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L4 6V18L12 22L20 18V6L12 2Z" fill="white" stroke="white" strokeWidth="2" />
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 2L4 6V18L12 22L20 18V6L12 2Z"
+                      fill="white"
+                      stroke="white"
+                      strokeWidth="2"
+                    />
                   </svg>
                 </div>
               </div>
@@ -52,7 +67,9 @@ export default function SwapInterface() {
                     >
                       <div className="flex items-center justify-between w-full">
                         {currency}
-                        {currency === fromCurrency && <Check className="h-4 w-4 ml-2" />}
+                        {currency === fromCurrency && (
+                          <Check className="h-4 w-4 ml-2" />
+                        )}
                       </div>
                     </DropdownMenuItem>
                   ))}
@@ -82,7 +99,13 @@ export default function SwapInterface() {
             <div className="flex items-center">
               <div className="bg-toggle rounded-full p-2 mr-2">
                 <div className="w-6 h-6 flex items-center justify-center text-white">
-                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <circle cx="12" cy="12" r="10" fill="#5CD2C6" />
                     <path
                       d="M8 14C9.10457 14 10 13.1046 10 12C10 10.8954 9.10457 10 8 10C6.89543 10 6 10.8954 6 12C6 13.1046 6.89543 14 8 14Z"
@@ -121,7 +144,9 @@ export default function SwapInterface() {
                     >
                       <div className="flex items-center justify-between w-full">
                         {currency}
-                        {currency === toCurrency && <Check className="h-4 w-4 ml-2" />}
+                        {currency === toCurrency && (
+                          <Check className="h-4 w-4 ml-2" />
+                        )}
                       </div>
                     </DropdownMenuItem>
                   ))}
@@ -150,7 +175,9 @@ export default function SwapInterface() {
         {/* Rate Display */}
         <div className="flex justify-between mb-4">
           <span className="text-card-foreground/70">Sell BNB at rate</span>
-          <span className="text-toggle cursor-pointer hover:underline">Set market rate</span>
+          <span className="text-toggle cursor-pointer hover:underline">
+            Set market rate
+          </span>
         </div>
 
         {/* Rate Card */}
@@ -159,7 +186,9 @@ export default function SwapInterface() {
             <span className="text-card-foreground/70 block">CAKE</span>
             <div className="flex items-baseline">
               <span className="text-white text-xl font-bold">237.777</span>
-              <span className="text-card-foreground/70 text-sm ml-2">~625.35 USD</span>
+              <span className="text-card-foreground/70 text-sm ml-2">
+                ~625.35 USD
+              </span>
             </div>
           </div>
           <div className="bg-input rounded-r-xl p-4 flex-1 border-l border-background">
@@ -179,7 +208,13 @@ export default function SwapInterface() {
           </div>
           <div className="flex items-center">
             <div className="mr-4">
-              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   d="M20 35C28.2843 35 35 28.2843 35 20C35 11.7157 28.2843 5 20 5C11.7157 5 5 11.7157 5 20C5 28.2843 11.7157 35 20 35Z"
                   fill="#5CD2C6"
@@ -223,7 +258,9 @@ export default function SwapInterface() {
         {/* Trade Interval and Max Duration */}
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-input rounded-xl p-4">
-            <span className="text-card-foreground/70 block text-sm">Trade Interval</span>
+            <span className="text-card-foreground/70 block text-sm">
+              Trade Interval
+            </span>
             <div className="flex items-center justify-between mt-1">
               <Input
                 type="number"
@@ -245,7 +282,9 @@ export default function SwapInterface() {
                     >
                       <div className="flex items-center justify-between w-full">
                         {unit}
-                        {unit === tradeInterval && <Check className="h-4 w-4 ml-2" />}
+                        {unit === tradeInterval && (
+                          <Check className="h-4 w-4 ml-2" />
+                        )}
                       </div>
                     </DropdownMenuItem>
                   ))}
@@ -254,7 +293,9 @@ export default function SwapInterface() {
             </div>
           </div>
           <div className="bg-input rounded-xl p-4">
-            <span className="text-card-foreground/70 block text-sm">Max Duration</span>
+            <span className="text-card-foreground/70 block text-sm">
+              Max Duration
+            </span>
             <div className="flex items-center justify-between mt-1">
               <Input
                 type="number"
@@ -276,7 +317,9 @@ export default function SwapInterface() {
                     >
                       <div className="flex items-center justify-between w-full">
                         {unit}
-                        {unit === maxDuration && <Check className="h-4 w-4 ml-2" />}
+                        {unit === maxDuration && (
+                          <Check className="h-4 w-4 ml-2" />
+                        )}
                       </div>
                     </DropdownMenuItem>
                   ))}
@@ -292,6 +335,5 @@ export default function SwapInterface() {
         </button>
       </div>
     </div>
-  )
+  );
 }
-
