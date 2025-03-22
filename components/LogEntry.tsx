@@ -1,63 +1,37 @@
-export default function LogEntry({
-    time,
-    type,
-    message,
-  }: { time: string; type: "SUCCESS" | "INFO" | "WARNING" | "ERROR"; message: string }) {
-    const getTypeColor = () => {
-      switch (type) {
-        case "SUCCESS":
-          return "bg-green-500"
-        case "INFO":
-          return "bg-primary"
-        case "WARNING":
-          return "bg-yellow-500"
-        case "ERROR":
-          return "bg-red-500"
-        default:
-          return "bg-primary"
-      }
+import React from 'react';
+import type { LogEntry as LogEntryType } from '@/lib/matching-engine';
+
+interface LogEntryProps {
+  time: string;
+  type: string;
+  message: string;
+}
+
+const LogEntry: React.FC<LogEntryProps> = ({ time, type, message }) => {
+  const getTypeColor = () => {
+    switch (type) {
+      case "SUCCESS":
+        return "text-emerald-500";
+      case "INFO":
+        return "text-blue-500";
+      case "WARNING":
+        return "text-amber-500";
+      case "ERROR":
+        return "text-red-500";
+      default:
+        return "text-blue-500";
     }
-  
-    const getTypeTextColor = () => {
-      switch (type) {
-        case "SUCCESS":
-          return "text-green-500"
-        case "INFO":
-          return "text-primary"
-        case "WARNING":
-          return "text-yellow-500"
-        case "ERROR":
-          return "text-red-500"
-        default:
-          return "text-primary"
-      }
-    }
-  
-    const getBgColor = () => {
-      switch (type) {
-        case "SUCCESS":
-          return "bg-green-500/10"
-        case "INFO":
-          return "bg-primary/10"
-        case "WARNING":
-          return "bg-yellow-500/10"
-        case "ERROR":
-          return "bg-red-500/10"
-        default:
-          return "bg-primary/10"
-      }
-    }
-  
-    return (
-      <div className={`rounded-lg ${getBgColor()} overflow-hidden flex`}>
-        <div className={`${getTypeColor()} w-1`}></div>
-        <div className="p-3 w-full">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-xs text-card-foreground/60 font-mono">{time}</span>
-            <span className={`text-xs font-bold ${getTypeTextColor()}`}>{type}</span>
-          </div>
-          <p className="text-sm text-card-foreground">{message}</p>
-        </div>
+  };
+
+  return (
+    <div className="bg-gradient-to-r from-[#F6411B]/5 to-green-500/5 rounded-xl p-3 border border-[#F6411B]/20 hover:border-green-500/20 transition-colors">
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-[#F6411B] text-sm font-medium">{time}</span>
+        <span className={`${getTypeColor()} text-sm font-medium`}>{type}</span>
       </div>
-    )
-  }
+      <p className="text-[#F6411B] text-sm">{message}</p>
+    </div>
+  );
+};
+
+export default LogEntry;

@@ -1,27 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, ArrowDown, Check } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
+import axios from "axios";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
 export default function SwapInterface() {
-  const [limitPrice, setLimitPrice] = useState(false);
   const [totalTrades, setTotalTrades] = useState(1);
   const [fromCurrency, setFromCurrency] = useState("Patty");
-  const [toCurrency, setToCurrency] = useState("Solo");
+  const [toCurrency, setToCurrency] = useState("Cheese");
   const [fromAmount, setFromAmount] = useState("0.0");
   const [toAmount, setToAmount] = useState("0.0");
   const [maxDuration, setMaxDuration] = useState("Min");
   const [maxDurationValue, setMaxDurationValue] = useState("4");
+  const [marketRate, setMarketRate] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-  const currencies = ["Patty", "Solo"];
+  const currencies = ["Patty", "Cheese"];
   const timeUnits = ["Min", "Hour", "Day"];
 
   const handleSwap = () => {
@@ -33,6 +36,38 @@ export default function SwapInterface() {
     setFromAmount(toAmount);
     setToAmount(fromAmount);
   };
+
+  const getMarketRate = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`/api/get-market-rate?fromToken=${fromCurrency}&toToken=${toCurrency}`);
+      setMarketRate(response.data.rate);
+      // Update toAmount based on current fromAmount and new rate
+      if (parseFloat(fromAmount) > 0) {
+        const newToAmount = (parseFloat(fromAmount) * response.data.rate).toFixed(6);
+        setToAmount(newToAmount);
+      }
+    } catch (error) {
+      console.error('Error fetching market rate:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Update toAmount whenever fromAmount changes
+  useEffect(() => {
+    if (parseFloat(fromAmount) > 0 && marketRate > 0) {
+      const newToAmount = (parseFloat(fromAmount) * marketRate).toFixed(6);
+      setToAmount(newToAmount);
+    } else {
+      setToAmount("0.0");
+    }
+  }, [fromAmount, marketRate]);
+
+  // Fetch initial market rate
+  useEffect(() => {
+    getMarketRate();
+  }, [fromCurrency, toCurrency]);
 
   const getTokenLogo = (currency: string, isFrom: boolean) => {
     if (currency === "Patty") {
@@ -96,11 +131,11 @@ export default function SwapInterface() {
   return (
     <div className="max-w-md w-full space-y-4">
       {/* Swap Card */}
-      <div className="bg-card rounded-3xl p-5 shadow-lg">
+      <div className="bg-gradient-to-br from-[#F6411B]/5 to-yellow-500/5 rounded-3xl p-5 shadow-lg border border-[#F6411B]/20">
         {/* From Section */}
         <div className="mb-4">
           <p className="text-[#F6411B] mb-2">From</p>
-          <div className="bg-[#F6411B]/10 rounded-2xl p-4 flex items-center justify-between border border-[#F6411B]/20">
+          <div className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 rounded-2xl p-4 flex items-center justify-between border border-[#F6411B]/20 hover:border-yellow-500/20 transition-colors">
             <div className="flex items-center">
               <div className={`${fromCurrency === "Patty" ? "bg-[#F6411B]" : "bg-white"} rounded-full p-2 mr-2`}>
                 <div className="w-6 h-6 flex items-center justify-center">
@@ -143,7 +178,7 @@ export default function SwapInterface() {
         <div className="flex justify-center my-4">
           <button 
             onClick={handleSwap}
-            className="bg-[#F6411B]/10 p-1 rounded-full border border-[#F6411B]/20 hover:bg-[#F6411B]/20 transition-colors"
+            className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 p-1 rounded-full border border-[#F6411B]/20 hover:border-yellow-500/20 hover:from-[#F6411B]/20 hover:to-yellow-500/20 transition-all"
           >
             <ArrowDown className="h-6 w-6 text-[#F6411B]" />
           </button>
@@ -152,7 +187,7 @@ export default function SwapInterface() {
         {/* To Section */}
         <div className="mb-4">
           <p className="text-[#F6411B] mb-2">To</p>
-          <div className="bg-[#F6411B]/10 rounded-2xl p-4 flex items-center justify-between border border-[#F6411B]/20">
+          <div className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 rounded-2xl p-4 flex items-center justify-between border border-[#F6411B]/20 hover:border-yellow-500/20 transition-colors">
             <div className="flex items-center">
               <div className={`${toCurrency === "Patty" ? "bg-[#F6411B]" : "bg-white"} rounded-full p-2 mr-2`}>
                 <div className="w-6 h-6 flex items-center justify-center">
@@ -193,32 +228,38 @@ export default function SwapInterface() {
 
         {/* Rate Display */}
         <div className="flex justify-between mb-4">
-          <span className="text-[#F6411B]">Sell Patty at rate</span>
-          <span className="text-[#F6411B] cursor-pointer hover:underline">
-            Set market rate
-          </span>
+          <span className="text-[#F6411B]">Sell {fromCurrency} at rate</span>
+          <button 
+            onClick={getMarketRate}
+            disabled={loading}
+            className="text-yellow-500 cursor-pointer hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? "Loading..." : "Set market rate"}
+          </button>
         </div>
 
         {/* Rate Card */}
         <div className="flex">
-          <div className="bg-[#F6411B]/10 rounded-l-xl p-4 flex-1 border border-[#F6411B]/20">
-            <span className="text-[#F6411B] block">Solo</span>
+          <div className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 rounded-l-xl p-4 flex-1 border border-[#F6411B]/20">
+            <span className="text-[#F6411B] block">{toCurrency}</span>
             <div className="flex items-baseline">
-              <span className="text-[#F6411B] text-xl font-bold">237.777</span>
-              <span className="text-[#F6411B]/70 text-sm ml-2">
-                ~625.35 USD
+              <span className="text-[#F6411B] text-xl font-bold">{marketRate.toFixed(6)}</span>
+              <span className="text-yellow-500/70 text-sm ml-2">
+                ~{(marketRate * 2.63).toFixed(2)} USD
               </span>
             </div>
           </div>
-          <div className="bg-[#F6411B]/10 rounded-r-xl p-4 flex-1 border border-[#F6411B]/20 border-l-0">
+          <div className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 rounded-r-xl p-4 flex-1 border border-[#F6411B]/20 border-l-0">
             <span className="text-[#F6411B] block">Min Amount</span>
-            <span className="text-[#F6411B] text-xl font-bold">{(parseFloat(toAmount) - 0.3).toFixed(2)}</span>
+            <span className="text-[#F6411B] text-xl font-bold">
+              {(parseFloat(toAmount) * (1 - (Math.random() * 0.02 + 0.03))).toFixed(2)}
+            </span>
           </div>
         </div>
       </div>
 
       {/* Trade Settings Card */}
-      <div className="bg-card rounded-3xl p-5 shadow-lg">
+      <div className="bg-gradient-to-br from-[#F6411B]/5 to-yellow-500/5 rounded-3xl p-5 shadow-lg border border-[#F6411B]/20">
         {/* Total Trades */}
         <div className="mb-6">
           <div className="flex justify-between mb-2">
@@ -230,33 +271,20 @@ export default function SwapInterface() {
               <svg
                 width="40"
                 height="40"
-                viewBox="0 0 40 40"
+                viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M20 35C28.2843 35 35 28.2843 35 20C35 11.7157 28.2843 5 20 5C11.7157 5 5 11.7157 5 20C5 28.2843 11.7157 35 20 35Z"
+                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
                   fill="#F6411B"
                 />
                 <path
-                  d="M15 22C16.6569 22 18 20.6569 18 19C18 17.3431 16.6569 16 15 16C13.3431 16 12 17.3431 12 19C12 20.6569 13.3431 22 15 22Z"
-                  fill="white"
-                />
-                <path
-                  d="M25 22C26.6569 22 28 20.6569 28 19C28 17.3431 26.6569 16 25 16C23.3431 16 22 17.3431 22 19C22 20.6569 23.3431 22 25 22Z"
-                  fill="white"
-                />
-                <path
-                  d="M20 28C21.1046 28 22 27.1046 22 26C22 24.8954 21.1046 24 20 24C18.8954 24 18 24.8954 18 26C18 27.1046 18.8954 28 20 28Z"
-                  fill="white"
-                />
-                <path
-                  d="M15 14C15.5523 14 16 13.5523 16 13C16 12.4477 15.5523 12 15 12C14.4477 12 14 12.4477 14 13C14 13.5523 14.4477 14 15 14Z"
-                  fill="white"
-                />
-                <path
-                  d="M25 14C25.5523 14 26 13.5523 26 13C26 12.4477 25.5523 12 25 12C24.4477 12 24 12.4477 24 13C24 13.5523 24.4477 14 25 14Z"
-                  fill="white"
+                  d="M12 6V12L16 14"
+                  stroke="white"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </div>
