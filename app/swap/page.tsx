@@ -5,7 +5,7 @@ import { FloatingFood } from "@/components/FloatingFood";
 const page = () => {
   return (
     <div className="flex flex-row justify-around items-center p-20 pt-4 bg-gradient-to-br from-white via-orange-50 to-orange-200">
-        <FloatingFood />
+      <FloatingFood />
       <SwapInterface />
       <LogBar />
     </div>

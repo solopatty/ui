@@ -1,5 +1,5 @@
-import React from 'react';
-import type { LogEntry as LogEntryType } from '@/lib/matching-engine';
+import React from "react";
+import type { LogEntry as LogEntryType } from "@/lib/matching-engine";
 
 interface LogEntryProps {
   time: string;

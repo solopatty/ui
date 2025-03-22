@@ -23,8 +23,7 @@ const fontKanit = Kanit({
 
 export const metadata: Metadata = {
   title: "SoloPatty",
-  description:
-    "Fair Trade, Dont get sandwiched!",
+  description: "Fair Trade, Dont get sandwiched!",
 };
 
 export default function RootLayout({
@@ -34,11 +33,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={fontKanit.variable}>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-kanit antialiased",
-        )}
-      >
+      <body className={cn("min-h-screen bg-background font-kanit antialiased")}>
         <Providers>
           <Header />
           {children}
