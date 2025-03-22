@@ -167,7 +167,7 @@ export default function SwapInterface() {
   return (
     <div className="max-w-md w-full space-y-4">
       {/* Swap Card */}
-      <div className="bg-gradient-to-br from-[#F6411B]/5 to-yellow-500/5 rounded-3xl p-5 shadow-lg border border-[#F6411B]/20">
+      <div className="bg-gradient-to-br backdrop-blur-sm from-[#F6411B]/5 to-yellow-500/5 rounded-3xl p-5 shadow-lg border border-[#F6411B]/20">
         {/* From Section */}
         <div className="mb-4">
           <p className="text-[#F6411B] mb-2">From</p>
@@ -305,7 +305,7 @@ export default function SwapInterface() {
       </div>
 
       {/* Trade Settings Card */}
-      <div className="bg-gradient-to-br from-[#F6411B]/5 to-yellow-500/5 rounded-3xl p-5 shadow-lg border border-[#F6411B]/20">
+      <div className="bg-gradient-to-br backdrop-blur-sm from-[#F6411B]/5 to-yellow-500/5 rounded-3xl p-5 shadow-lg border border-[#F6411B]/20">
         {/* Total Trades */}
         <div className="mb-6">
           <div className="flex justify-between mb-2">

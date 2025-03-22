@@ -74,7 +74,7 @@ export const FloatingFood = () => {
             transform: `rotate(${item.rotation}deg) scale(${item.scale})`,
             animationDuration: `${item.duration}s`,
             animationDelay: `${item.delay}s`,
-            opacity: 0.25,
+            opacity: 0.20,
             filter: 'blur(0.5px)',
           }}
         >

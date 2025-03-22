@@ -35,7 +35,7 @@ export const LogBar = () => {
   }, []);
 
   return (
-    <div className="max-w-md w-full space-y-4">
+    <div className="max-w-md backdrop-blur-sm w-full space-y-4">
       <div className="bg-gradient-to-br from-[#F6411B]/5 to-blue-500/5 rounded-3xl p-5 shadow-lg border border-[#F6411B]/20">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-[#F6411B] text-lg font-bold">Transaction Logs</h2>
