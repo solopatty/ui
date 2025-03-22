@@ -69,61 +69,22 @@ export default function SwapInterface() {
     getMarketRate();
   }, [fromCurrency, toCurrency]);
 
-  const getTokenLogo = (currency: string, isFrom: boolean) => {
+  const getTokenLogo = (currency: string) => {
     if (currency === "Patty") {
       return (
-        <svg
-          viewBox="0 0 24 24"
-          width="24"
-          height="24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12 2L4 6V18L12 22L20 18V6L12 2Z"
-            fill={isFrom ? "white" : "#F6411B"}
-            stroke={isFrom ? "white" : "#F6411B"}
-            strokeWidth="2"
-          />
-          {!isFrom && (
-            <path
-              d="M12 8L8 10V14L12 16L16 14V10L12 8Z"
-              fill="white"
-            />
-          )}
-        </svg>
+        <img
+          src="/patty.png"
+          alt="Patty"
+          className={`w-6 h-6`}
+        />
       );
     } else {
       return (
-        <svg
-          viewBox="0 0 24 24"
-          width="24"
-          height="24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle cx="12" cy="12" r="10" fill={isFrom ? "#F6411B" : "white"} />
-          <path
-            d="M8 14C9.10457 14 10 13.1046 10 12C10 10.8954 9.10457 10 8 10C6.89543 10 6 10.8954 6 12C6 13.1046 6.89543 14 8 14Z"
-            fill={isFrom ? "white" : "#F6411B"}
-          />
-          <path
-            d="M16 14C17.1046 14 18 13.1046 18 12C18 10.8954 17.1046 10 16 10C14.8954 10 14 10.8954 14 12C14 13.1046 14.8954 14 16 14Z"
-            fill={isFrom ? "white" : "#F6411B"}
-          />
-          <path
-            d="M9 8C9 8.55228 8.55228 9 8 9C7.44772 9 7 8.55228 7 8C7 7.44772 7.44772 7 8 7C8.55228 7 9 7.44772 9 8Z"
-            fill={isFrom ? "white" : "#F6411B"}
-          />
-          <path
-            d="M17 8C17 8.55228 16.5523 9 16 9C15.4477 9 15 8.55228 15 8C15 7.44772 15.4477 7 16 7C16.5523 7 17 7.44772 17 8Z"
-            fill={isFrom ? "white" : "#F6411B"}
-          />
-          <path
-            d="M12 18C12.5523 18 13 17.5523 13 17C13 16.4477 12.5523 16 12 16C11.4477 16 11 16.4477 11 17C11 17.5523 11.4477 18 12 18Z"
-            fill={isFrom ? "white" : "#F6411B"}
-          />
-        </svg>
+        <img
+          src="/cheese.svg"
+          alt="Cheese"
+          className={`w-6 h-6`}
+        />
       );
     }
   };
@@ -137,9 +98,9 @@ export default function SwapInterface() {
           <p className="text-[#F6411B] mb-2">From</p>
           <div className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 rounded-2xl p-4 flex items-center justify-between border border-[#F6411B]/20 hover:border-yellow-500/20 transition-colors">
             <div className="flex items-center">
-              <div className={`${fromCurrency === "Patty" ? "bg-[#F6411B]" : "bg-white"} rounded-full p-2 mr-2`}>
+              <div className={`bg-white rounded-full p-2 mr-2`}>
                 <div className="w-6 h-6 flex items-center justify-center">
-                  {getTokenLogo(fromCurrency, true)}
+                  {getTokenLogo(fromCurrency)}
                 </div>
               </div>
               <DropdownMenu>
@@ -189,9 +150,9 @@ export default function SwapInterface() {
           <p className="text-[#F6411B] mb-2">To</p>
           <div className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 rounded-2xl p-4 flex items-center justify-between border border-[#F6411B]/20 hover:border-yellow-500/20 transition-colors">
             <div className="flex items-center">
-              <div className={`${toCurrency === "Patty" ? "bg-[#F6411B]" : "bg-white"} rounded-full p-2 mr-2`}>
+              <div className={`bg-white rounded-full p-2 mr-2`}>
                 <div className="w-6 h-6 flex items-center justify-center">
-                  {getTokenLogo(toCurrency, false)}
+                  {getTokenLogo(toCurrency)}
                 </div>
               </div>
               <DropdownMenu>
