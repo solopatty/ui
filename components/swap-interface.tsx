@@ -18,9 +18,7 @@ export default function SwapInterface() {
   const [toCurrency, setToCurrency] = useState("CAKE");
   const [fromAmount, setFromAmount] = useState("0.0");
   const [toAmount, setToAmount] = useState("0.0");
-  const [tradeInterval, setTradeInterval] = useState("Min");
   const [maxDuration, setMaxDuration] = useState("Min");
-  const [tradeIntervalValue, setTradeIntervalValue] = useState("2");
   const [maxDurationValue, setMaxDurationValue] = useState("4");
 
   const currencies = ["BNB", "ETH", "USDT", "CAKE", "BTC"];
