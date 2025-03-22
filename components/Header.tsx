@@ -1,14 +1,16 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Wrapper } from "./Wrapper";
+import Link from "next/link";
 
 const Header = () => {
   return (
-    <header className="py-8 border-b mb-10">
+    <header className="py-4 border-b mb-2">
       <Wrapper>
         <div className="flex items-center justify-between">
-          <h1 className="text-lg md:text-xl font-bold">
+          <Link href="/"className="text-lg md:text-xl font-bold">
             SoloPatty
-          </h1>
+          </Link>
+          <Link href="/swap">Swap</Link>
           <ConnectButton
             showBalance={false}
             accountStatus="address"
