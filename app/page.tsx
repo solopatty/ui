@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Home = () => {
   return (
-    <main>
+    <main className="bg-gradient-to-br from-white via-orange-50 to-orange-300 h-screen">
       <Wrapper>
         <div className="flex flex-col items-center">
           <div className="relative h-fit w-fit p-16 rounded-full flex flex-col items-center justify-center text-white font-bold">

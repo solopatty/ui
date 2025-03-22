@@ -99,7 +99,7 @@ export default function SwapInterface() {
       <div className="bg-card rounded-3xl p-5 shadow-lg">
         {/* From Section */}
         <div className="mb-4">
-          <p className="text-card-foreground/70 mb-2">From</p>
+          <p className="text-[#F6411B] mb-2">From</p>
           <div className="bg-[#F6411B]/10 rounded-2xl p-4 flex items-center justify-between border border-[#F6411B]/20">
             <div className="flex items-center">
               <div className={`${fromCurrency === "Patty" ? "bg-[#F6411B]" : "bg-white"} rounded-full p-2 mr-2`}>
@@ -108,11 +108,11 @@ export default function SwapInterface() {
                 </div>
               </div>
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center text-white font-bold text-lg focus:outline-none">
+                <DropdownMenuTrigger className="flex items-center text-[#F6411B] font-bold text-lg focus:outline-none">
                   {fromCurrency}
-                  <ChevronDown className="ml-1 h-5 w-5 text-white/70" />
+                  <ChevronDown className="ml-1 h-5 w-5 text-[#F6411B]/70" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-[#F6411B]/10 text-white border-[#F6411B]/20">
+                <DropdownMenuContent className="bg-[#F6411B]/10 text-[#F6411B] border-[#F6411B]/20">
                   {currencies.map((currency) => (
                     <DropdownMenuItem
                       key={currency}
@@ -134,7 +134,7 @@ export default function SwapInterface() {
               type="text"
               value={fromAmount}
               onChange={(e) => setFromAmount(e.target.value)}
-              className="bg-transparent border-none text-white text-2xl font-bold text-right w-24 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="bg-transparent border-none text-[#F6411B] text-2xl font-bold text-right w-24 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
         </div>
@@ -151,7 +151,7 @@ export default function SwapInterface() {
 
         {/* To Section */}
         <div className="mb-4">
-          <p className="text-card-foreground/70 mb-2">To</p>
+          <p className="text-[#F6411B] mb-2">To</p>
           <div className="bg-[#F6411B]/10 rounded-2xl p-4 flex items-center justify-between border border-[#F6411B]/20">
             <div className="flex items-center">
               <div className={`${toCurrency === "Patty" ? "bg-[#F6411B]" : "bg-white"} rounded-full p-2 mr-2`}>
@@ -160,11 +160,11 @@ export default function SwapInterface() {
                 </div>
               </div>
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center text-white font-bold text-lg focus:outline-none">
+                <DropdownMenuTrigger className="flex items-center text-[#F6411B] font-bold text-lg focus:outline-none">
                   {toCurrency}
-                  <ChevronDown className="ml-1 h-5 w-5 text-white/70" />
+                  <ChevronDown className="ml-1 h-5 w-5 text-[#F6411B]/70" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-[#F6411B]/10 text-white border-[#F6411B]/20">
+                <DropdownMenuContent className="bg-[#F6411B]/10 text-[#F6411B] border-[#F6411B]/20">
                   {currencies.map((currency) => (
                     <DropdownMenuItem
                       key={currency}
@@ -186,14 +186,14 @@ export default function SwapInterface() {
               type="text"
               value={toAmount}
               onChange={(e) => setToAmount(e.target.value)}
-              className="bg-transparent border-none text-white text-2xl font-bold text-right w-24 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="bg-transparent border-none text-[#F6411B] text-2xl font-bold text-right w-24 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
         </div>
 
         {/* Rate Display */}
         <div className="flex justify-between mb-4">
-          <span className="text-card-foreground/70">Sell Patty at rate</span>
+          <span className="text-[#F6411B]">Sell Patty at rate</span>
           <span className="text-[#F6411B] cursor-pointer hover:underline">
             Set market rate
           </span>
@@ -202,17 +202,17 @@ export default function SwapInterface() {
         {/* Rate Card */}
         <div className="flex">
           <div className="bg-[#F6411B]/10 rounded-l-xl p-4 flex-1 border border-[#F6411B]/20">
-            <span className="text-card-foreground/70 block">Solo</span>
+            <span className="text-[#F6411B] block">Solo</span>
             <div className="flex items-baseline">
-              <span className="text-white text-xl font-bold">237.777</span>
-              <span className="text-card-foreground/70 text-sm ml-2">
+              <span className="text-[#F6411B] text-xl font-bold">237.777</span>
+              <span className="text-[#F6411B]/70 text-sm ml-2">
                 ~625.35 USD
               </span>
             </div>
           </div>
           <div className="bg-[#F6411B]/10 rounded-r-xl p-4 flex-1 border border-[#F6411B]/20 border-l-0">
-            <span className="text-card-foreground/70 block">Min Amount</span>
-            <span className="text-white text-xl font-bold">{(parseFloat(toAmount) - 0.3).toFixed(2)}</span>
+            <span className="text-[#F6411B] block">Min Amount</span>
+            <span className="text-[#F6411B] text-xl font-bold">{(parseFloat(toAmount) - 0.3).toFixed(2)}</span>
           </div>
         </div>
       </div>
@@ -222,8 +222,8 @@ export default function SwapInterface() {
         {/* Total Trades */}
         <div className="mb-6">
           <div className="flex justify-between mb-2">
-            <span className="text-card-foreground/70">Total Trades</span>
-            <span className="text-white font-bold">{totalTrades}</span>
+            <span className="text-[#F6411B]">Expiry</span>
+            <span className="text-[#F6411B] font-bold">{totalTrades} {maxDuration}</span>
           </div>
           <div className="flex items-center">
             <div className="mr-4">
@@ -267,10 +267,7 @@ export default function SwapInterface() {
               onValueChange={(value) => setTotalTrades(value[0])}
               className="flex-1"
             />
-          </div>
-          <div className="flex justify-between mt-1">
-            <span className="text-card-foreground/70">Size Per Trade:</span>
-            <span className="text-white">0 Patty</span>
+
           </div>
         </div>
 

@@ -35,7 +35,7 @@ export const LogBar = () => {
   }, []);
 
   return (
-    <div className="space-y-2 p-4">
+    <div className="space-y-2 p-4 bg-white rounded-lg shadow-md">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Transaction Logs</h2>
         <button 
