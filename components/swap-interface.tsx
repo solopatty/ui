@@ -1,170 +1,170 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { ChevronDown, ArrowDown, Check } from "lucide-react"
-import { ConnectButton } from "@rainbow-me/rainbowkit"
-import { useAccount } from "wagmi"
-import { Slider } from "@/components/ui/slider"
-import { Input } from "@/components/ui/input"
-import Image from "next/image"
-import axios from "axios"
+import { useState, useEffect } from "react";
+import { ChevronDown, ArrowDown, Check } from "lucide-react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount } from "wagmi";
+import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
+import Image from "next/image";
+import axios from "axios";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useDeposit } from "@/hooks/deposit"
+} from "@/components/ui/dropdown-menu";
+import { useDeposit } from "@/hooks/deposit";
 
 export default function SwapInterface() {
-  const [totalTrades, setTotalTrades] = useState(1)
-  const [fromCurrency, setFromCurrency] = useState("Patty")
-  const [toCurrency, setToCurrency] = useState("Cheese")
-  const [fromAmount, setFromAmount] = useState("0.0")
-  const [toAmount, setToAmount] = useState("0.0")
-  const [maxDuration, setMaxDuration] = useState("Min")
-  const [maxDurationValue, setMaxDurationValue] = useState("4")
-  const [marketRate, setMarketRate] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const { isConnected } = useAccount()
+  const [totalTrades, setTotalTrades] = useState(1);
+  const [fromCurrency, setFromCurrency] = useState("Patty");
+  const [toCurrency, setToCurrency] = useState("Cheese");
+  const [fromAmount, setFromAmount] = useState("0.0");
+  const [toAmount, setToAmount] = useState("0.0");
+  const [maxDuration, setMaxDuration] = useState("Min");
+  const [maxDurationValue, setMaxDurationValue] = useState("4");
+  const [marketRate, setMarketRate] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const { isConnected } = useAccount();
   const [swapStage, setSwapStage] = useState<
     "idle" | "depositing" | "matching" | "claiming" | "claimable"
-  >("idle")
+  >("idle");
 
-  const currencies = ["Patty", "Cheese", "Lettuce"]
-  const timeUnits = ["Min", "Hour", "Day"]
+  const currencies = ["Patty", "Cheese", "Lettuce"];
+  const timeUnits = ["Min", "Hour", "Day"];
 
   const tokenAddressMap: Record<string, `0x${string}`> = {
     Patty: "0x126F0c11F3e5EafE37AB143D4AA688429ef7DCB3",
     Cheese: "0x5D7714751FAf22a96F7D2eAC15304839242cF8c0",
     Lettuce: "0xF7aE103AacD84641Fa0c43860C23a8Cf7cE5DB5a",
-  }
+  };
 
   const handleSwap = () => {
-    if (!isConnected) return
+    if (!isConnected) return;
 
     // Swap currencies and amounts
-    setFromCurrency(toCurrency)
-    setToCurrency(fromCurrency)
-    setFromAmount(toAmount)
-    setToAmount(fromAmount)
-  }
+    setFromCurrency(toCurrency);
+    setToCurrency(fromCurrency);
+    setFromAmount(toAmount);
+    setToAmount(fromAmount);
+  };
 
   const { depositTokens } = useDeposit({
     tokenAddress: tokenAddressMap[fromCurrency],
     amount: fromAmount,
     decimals: 18,
     onDepositSuccess: () => {
-      setSwapStage("matching")
+      setSwapStage("matching");
       setTimeout(() => {
-        setSwapStage("claimable")
-      }, 2000)
+        setSwapStage("claimable");
+      }, 2000);
     },
-  })
+  });
 
   const handleMainSwap = async () => {
-    if (!isConnected) return
-    setSwapStage("depositing")
+    if (!isConnected) return;
+    setSwapStage("depositing");
 
     try {
-      const txHash = await depositTokens?.()
+      const txHash = await depositTokens?.();
       if (txHash) {
-        console.log("✅ Deposit transaction submitted:", txHash)
+        console.log("✅ Deposit transaction submitted:", txHash);
       } else {
-        console.warn("⚠️ depositTokens returned undefined.")
+        console.warn("⚠️ depositTokens returned undefined.");
       }
     } catch (err) {
-      console.error("❌ Deposit failed:", err)
-      setSwapStage("idle")
+      console.error("❌ Deposit failed:", err);
+      setSwapStage("idle");
     }
-  }
+  };
 
   const handleClaim = () => {
     if (swapStage === "claimable") {
       // Simulate claiming process
-      setSwapStage("claiming")
+      setSwapStage("claiming");
       setTimeout(() => {
-        setSwapStage("idle")
-      }, 2000)
+        setSwapStage("idle");
+      }, 2000);
     }
-  }
+  };
 
   const getButtonText = () => {
-    if (!isConnected) return "Connect Wallet"
+    if (!isConnected) return "Connect Wallet";
     switch (swapStage) {
       case "depositing":
-        return "Depositing..."
+        return "Depositing...";
       case "matching":
-        return "Matching..."
+        return "Matching...";
       case "claiming":
-        return "Claiming..."
+        return "Claiming...";
       case "claimable":
-        return "Claim Now"
+        return "Claim Now";
       default:
-        return "Swap"
+        return "Swap";
     }
-  }
+  };
 
   const getButtonDisabled = () => {
-    return !isConnected || (swapStage !== "idle" && swapStage !== "claimable")
-  }
+    return !isConnected || (swapStage !== "idle" && swapStage !== "claimable");
+  };
 
   const getButtonClassName = () => {
     const baseClasses =
-      "w-full text-white font-bold py-4 px-6 rounded-xl mt-4 transition-colors"
+      "w-full text-white font-bold py-4 px-6 rounded-xl mt-4 transition-colors";
     if (!isConnected) {
-      return `${baseClasses} bg-[#F6411B] hover:bg-[#F6411B]/90`
+      return `${baseClasses} bg-[#F6411B] hover:bg-[#F6411B]/90`;
     }
 
     switch (swapStage) {
       case "claimable":
-        return `${baseClasses} bg-green-500 hover:bg-green-600`
+        return `${baseClasses} bg-green-500 hover:bg-green-600`;
       case "depositing":
       case "matching":
       case "claiming":
-        return `${baseClasses} bg-[#F6411B] opacity-50 cursor-not-allowed`
+        return `${baseClasses} bg-[#F6411B] opacity-50 cursor-not-allowed`;
       default:
-        return `${baseClasses} bg-[#F6411B] hover:bg-[#F6411B]/90`
+        return `${baseClasses} bg-[#F6411B] hover:bg-[#F6411B]/90`;
     }
-  }
+  };
 
   const getMarketRate = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await axios.get(
-        `/api/get-market-rate?fromToken=${fromCurrency}&toToken=${toCurrency}`
-      )
-      setMarketRate(response.data.rate)
+        `/api/get-market-rate?fromToken=${fromCurrency}&toToken=${toCurrency}`,
+      );
+      setMarketRate(response.data.rate);
       // Update toAmount based on current fromAmount and new rate
       if (parseFloat(fromAmount) > 0) {
         const newToAmount = (
           parseFloat(fromAmount) * response.data.rate
-        ).toFixed(6)
-        setToAmount(newToAmount)
+        ).toFixed(6);
+        setToAmount(newToAmount);
       }
     } catch (error) {
-      console.error("Error fetching market rate:", error)
+      console.error("Error fetching market rate:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // Update toAmount whenever fromAmount changes
   useEffect(() => {
     if (parseFloat(fromAmount) > 0 && marketRate > 0) {
-      const newToAmount = (parseFloat(fromAmount) * marketRate).toFixed(6)
-      setToAmount(newToAmount)
+      const newToAmount = (parseFloat(fromAmount) * marketRate).toFixed(6);
+      setToAmount(newToAmount);
     } else {
-      setToAmount("0.0")
+      setToAmount("0.0");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fromAmount, marketRate])
+  }, [fromAmount, marketRate]);
 
   // Fetch initial market rate
   useEffect(() => {
-    getMarketRate()
+    getMarketRate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fromCurrency, toCurrency])
+  }, [fromCurrency, toCurrency]);
 
   const getTokenLogo = (currency: string) => {
     if (currency === "Patty") {
@@ -176,7 +176,7 @@ export default function SwapInterface() {
           width={24}
           height={24}
         />
-      )
+      );
     } else if (currency === "Cheese") {
       return (
         <Image
@@ -186,7 +186,7 @@ export default function SwapInterface() {
           width={24}
           height={24}
         />
-      )
+      );
     } else {
       return (
         <Image
@@ -196,9 +196,9 @@ export default function SwapInterface() {
           width={24}
           height={24}
         />
-      )
+      );
     }
-  }
+  };
 
   return (
     <div className="max-w-md w-full space-y-4">
@@ -397,5 +397,5 @@ export default function SwapInterface() {
         </button>
       </div>
     </div>
-  )
+  );
 }
