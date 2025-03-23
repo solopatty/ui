@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useDeposit } from "@/hooks/deposit";
+import { matchingEngine } from "@/lib/matching-engine";
 
 export default function SwapInterface() {
   const [totalTrades, setTotalTrades] = useState(1);
@@ -28,7 +29,7 @@ export default function SwapInterface() {
   const [loading, setLoading] = useState(false);
   const { isConnected } = useAccount();
   const [swapStage, setSwapStage] = useState<
-    "idle" | "depositing" | "matching" | "claiming" | "claimable"
+    "idle" | "depositing" | "matching" | "match_found" | "claiming"
   >("idle");
 
   const currencies = ["Patty", "Cheese", "Lettuce"];
@@ -57,7 +58,7 @@ export default function SwapInterface() {
     onDepositSuccess: () => {
       setSwapStage("matching");
       setTimeout(() => {
-        setSwapStage("claimable");
+        setSwapStage("idle");
       }, 2000);
     },
   });
@@ -70,22 +71,39 @@ export default function SwapInterface() {
       const txHash = await depositTokens?.();
       if (txHash) {
         console.log("✅ Deposit transaction submitted:", txHash);
+        await matchingEngine.initiateDeposit(txHash);
+        
+        // Simulate deposit confirmation with longer delay
+        setTimeout(async () => {
+          await matchingEngine.depositConfirmed();
+          setSwapStage("matching");
+          
+          // Simulate intent submission with longer delay
+          setTimeout(async () => {
+            await matchingEngine.intentsSubmitted();
+            
+            // Simulate finding matches and completing swap with longer delays
+            setTimeout(async () => {
+              await matchingEngine.matchesFound();
+              setSwapStage("match_found");
+              
+              // Add delay before sending tokens
+              setTimeout(async () => {
+                await matchingEngine.tokensSent();
+                setSwapStage("idle");
+              }, 3000);
+            }, 4000);
+          }, 9500);
+        }, 3000);
       } else {
         console.warn("⚠️ depositTokens returned undefined.");
+        await matchingEngine.depositFailed("Transaction failed to submit");
+        setSwapStage("idle");
       }
     } catch (err) {
       console.error("❌ Deposit failed:", err);
+      await matchingEngine.depositFailed(err instanceof Error ? err.message : "Unknown error");
       setSwapStage("idle");
-    }
-  };
-
-  const handleClaim = () => {
-    if (swapStage === "claimable") {
-      // Simulate claiming process
-      setSwapStage("claiming");
-      setTimeout(() => {
-        setSwapStage("idle");
-      }, 2000);
     }
   };
 
@@ -96,17 +114,17 @@ export default function SwapInterface() {
         return "Depositing...";
       case "matching":
         return "Matching...";
+      case "match_found":
+        return "Match Found!";
       case "claiming":
         return "Claiming...";
-      case "claimable":
-        return "Claim Now";
       default:
         return "Swap";
     }
   };
 
   const getButtonDisabled = () => {
-    return !isConnected || (swapStage !== "idle" && swapStage !== "claimable");
+    return !isConnected || swapStage !== "idle";
   };
 
   const getButtonClassName = () => {
@@ -117,10 +135,9 @@ export default function SwapInterface() {
     }
 
     switch (swapStage) {
-      case "claimable":
-        return `${baseClasses} bg-green-500 hover:bg-green-600`;
       case "depositing":
       case "matching":
+      case "match_found":
       case "claiming":
         return `${baseClasses} bg-[#F6411B] opacity-50 cursor-not-allowed`;
       default:
@@ -390,7 +407,7 @@ export default function SwapInterface() {
         {/* Connect Wallet Button */}
         <button
           className={getButtonClassName()}
-          onClick={swapStage === "claimable" ? handleClaim : handleMainSwap}
+          onClick={handleMainSwap}
           disabled={getButtonDisabled()}
         >
           {getButtonText()}

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import LogEntry from "./LogEntry";
 import { matchingEngine } from "@/lib/matching-engine";
 import type { LogEntry as LogEntryType } from "@/lib/matching-engine";
@@ -10,11 +10,17 @@ export const LogBar = () => {
   const [logs, setLogs] = useState<LogEntryType[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const handleLogUpdate = useCallback((newLogs: LogEntryType[]) => {
+    console.log("[LogBar] Received log update:", newLogs);
+    setLogs(newLogs);
+  }, []);
+
   useEffect(() => {
     const fetchLogs = async () => {
       setLoading(true);
       try {
         const logsData = await matchingEngine.fetchTEELogs();
+        console.log("[LogBar] Fetched initial logs:", logsData);
         setLogs(logsData);
       } catch (error) {
         console.error("[LogViewer] Error fetching logs:", error);
@@ -25,14 +31,15 @@ export const LogBar = () => {
 
     fetchLogs();
 
-    // simulate periodic log updates (every 10 seconds)
-    const intervalId = setInterval(() => {
-      console.log("[LogViewer] Fetching new logs from blockchain...");
-      fetchLogs();
-    }, 10000);
+    // Subscribe to log updates
+    console.log("[LogBar] Setting up log subscription");
+    const unsubscribe = matchingEngine.subscribeToLogs(handleLogUpdate);
 
-    return () => clearInterval(intervalId);
-  }, []);
+    return () => {
+      console.log("[LogBar] Cleaning up subscription");
+      unsubscribe();
+    };
+  }, [handleLogUpdate]);
 
   return (
     <div className="max-w-md backdrop-blur-sm w-full space-y-4">
@@ -56,18 +63,16 @@ export const LogBar = () => {
           </button>
         </div>
         <div className="h-[400px] overflow-y-auto">
-          {!loading && (
-            <div className="space-y-2">
-              {logs.map((log, index) => (
-                <LogEntry
-                  key={index}
-                  time={log.time}
-                  type={log.type}
-                  message={log.message}
-                />
-              ))}
-            </div>
-          )}
+          <div className="space-y-2">
+            {logs.map((log, index) => (
+              <LogEntry
+                key={`${log.time}-${index}`}
+                time={log.time}
+                type={log.type}
+                message={log.message}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
