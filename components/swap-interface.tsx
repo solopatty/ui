@@ -35,7 +35,7 @@ export default function SwapInterface() {
 
   const handleSwap = () => {
     if (!isConnected) return;
-
+    
     // Swap currencies and amounts
     setFromCurrency(toCurrency);
     setToCurrency(fromCurrency);
@@ -45,10 +45,10 @@ export default function SwapInterface() {
 
   const handleMainSwap = () => {
     if (!isConnected) return;
-
+    
     // Start the swap process
     setSwapStage("depositing");
-
+    
     // Simulate the swap process
     setTimeout(() => {
       setSwapStage("matching");
