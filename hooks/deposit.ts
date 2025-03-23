@@ -1,15 +1,12 @@
-"use client"
-
-import { useEffect } from "react"
 import {
   useAccount,
   useWriteContract,
   useWaitForTransactionReceipt,
 } from "wagmi"
 import { parseUnits } from "viem"
-import SOLOPATTY_ABI from "@/abi/solopatty.json" // adjust path if needed
+import SOLOPATTY_ABI from "@/abi/solopatty.json"
 
-const useDeposit = ({
+export const useDeposit = ({
   tokenAddress,
   amount,
   decimals = 18,
@@ -19,52 +16,25 @@ const useDeposit = ({
   amount?: string
   decimals?: number
   onDepositSuccess?: () => void
-}): {
-  address: `0x${string}` | undefined
-  depositTokens: (() => void) | undefined
-  depositLoading: boolean
-  prepareDepositError: boolean
-  depositError: boolean
-} => {
+}) => {
+  const { writeContractAsync } = useWriteContract()
   const { address } = useAccount()
 
-  const {
-    data: depositTxHash,
-    writeContract: deposit,
-    isPending: isDepositing,
-    isError: depositError,
-  } = useWriteContract()
+  const depositTokens = async (): Promise<`0x${string}`> => {
+    if (!tokenAddress || !amount || !address) throw new Error("Missing params")
 
-  const { isSuccess: txSuccess, isLoading: txLoading } =
-    useWaitForTransactionReceipt({
-      hash: depositTxHash,
-      query: {
-        enabled: Boolean(depositTxHash),
-      },
+    const txHash = await writeContractAsync({
+      address: "0xCB30D0881119bA8837A9e26E298d3b73c4c521EC" as `0x${string}`,
+      abi: SOLOPATTY_ABI,
+      functionName: "depositTokens",
+      args: [tokenAddress, parseUnits(amount, decimals)],
+      account: address,
     })
 
-  useEffect(() => {
-    if (txSuccess) {
-      onDepositSuccess?.()
-    }
-  }, [txSuccess]) // eslint-disable-line react-hooks/exhaustive-deps
+    return txHash
+  }
 
   return {
-    address,
-    depositTokens: () =>
-      deposit?.({
-        address: "0xCB30D0881119bA8837A9e26E298d3b73c4c521EC" as `0x${string}`,
-        abi: SOLOPATTY_ABI,
-        functionName: "depositTokens",
-        args: [
-          tokenAddress as `0x${string}`,
-          parseUnits(amount || "0", decimals),
-        ],
-      }),
-    depositLoading: isDepositing || txLoading,
-    prepareDepositError: !tokenAddress || !amount,
-    depositError,
+    depositTokens,
   }
 }
-
-export { useDeposit }

@@ -50,7 +50,7 @@ export default function SwapInterface() {
     setToAmount(fromAmount)
   }
 
-  const { depositTokens, depositLoading, depositError } = useDeposit({
+  const { depositTokens } = useDeposit({
     tokenAddress: tokenAddressMap[fromCurrency],
     amount: fromAmount,
     decimals: 18,
@@ -64,15 +64,15 @@ export default function SwapInterface() {
 
   const handleMainSwap = async () => {
     if (!isConnected) return
-
     setSwapStage("depositing")
 
     try {
-      const txHash = await depositTokens?.() // triggers the deposit
-      console.log("✅ Deposit transaction submitted:", txHash)
-
-      // Optional toast or UI feedback
-      // toast.success("Deposit transaction sent!");
+      const txHash = await depositTokens?.()
+      if (txHash) {
+        console.log("✅ Deposit transaction submitted:", txHash)
+      } else {
+        console.warn("⚠️ depositTokens returned undefined.")
+      }
     } catch (err) {
       console.error("❌ Deposit failed:", err)
       setSwapStage("idle")
