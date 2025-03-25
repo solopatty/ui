@@ -36,9 +36,9 @@ export default function SwapInterface() {
   const timeUnits = ["Min", "Hour", "Day"];
 
   const tokenAddressMap: Record<string, `0x${string}`> = {
-    Patty: "0x126F0c11F3e5EafE37AB143D4AA688429ef7DCB3",
-    Cheese: "0x5D7714751FAf22a96F7D2eAC15304839242cF8c0",
-    Lettuce: "0xF7aE103AacD84641Fa0c43860C23a8Cf7cE5DB5a",
+    Patty: "0xCAdaFeDf40140C8eBCa3A0E802dfC4dD72869c9F",
+    Cheese: "0xC9EbB17FC1f5101Db84EA345693194c520b411bb",
+    Lettuce: "0xa966bdf941ea2eccc8ADC453B977FFeE27bC2f55",
   };
 
   const handleSwap = () => {

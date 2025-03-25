@@ -24,7 +24,7 @@ export const useDeposit = ({
     if (!tokenAddress || !amount || !address) throw new Error("Missing params");
 
     const txHash = await writeContractAsync({
-      address: "0xCB30D0881119bA8837A9e26E298d3b73c4c521EC" as `0x${string}`,
+      address: "0x5De6e7cAE4b30d4CbF744B6Dd78c6418F5750570" as `0x${string}`,
       abi: SOLOPATTY_ABI,
       functionName: "depositTokens",
       args: [tokenAddress, parseUnits(amount, decimals)],
