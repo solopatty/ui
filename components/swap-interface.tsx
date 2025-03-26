@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { ChevronDown, ArrowDown, Check } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useAccount } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
@@ -27,7 +27,8 @@ export default function SwapInterface() {
   const [maxDurationValue, setMaxDurationValue] = useState("4");
   const [marketRate, setMarketRate] = useState(0);
   const [loading, setLoading] = useState(false);
-  const { isConnected } = useAccount();
+  const [swappedAmount, setSwappedAmount] = useState("0.0");
+  const { isConnected, address } = useAccount();
   const [swapStage, setSwapStage] = useState<
     "idle" | "depositing" | "matching" | "match_found" | "claiming"
   >("idle");
@@ -40,6 +41,22 @@ export default function SwapInterface() {
     Cheese: "0xC9EbB17FC1f5101Db84EA345693194c520b411bb",
     Lettuce: "0xa966bdf941ea2eccc8ADC453B977FFeE27bC2f55",
   };
+
+  // Get balances for both tokens
+  const { data: fromBalance } = useBalance({
+    address,
+    token: tokenAddressMap[fromCurrency],
+  });
+
+  const { data: toBalance } = useBalance({
+    address,
+    token: tokenAddressMap[toCurrency],
+  });
+
+  // Calculate total balance including swapped amount
+  const totalToBalance = toBalance ? 
+    (parseFloat(toBalance.formatted) + parseFloat(swappedAmount)).toFixed(6) : 
+    swappedAmount;
 
   const handleSwap = () => {
     if (!isConnected) return;
@@ -66,6 +83,7 @@ export default function SwapInterface() {
   const handleMainSwap = async () => {
     if (!isConnected) return;
     setSwapStage("depositing");
+    setSwappedAmount("0.0"); // Reset swapped amount at start of new swap
 
     try {
       const txHash = await depositTokens?.();
@@ -90,11 +108,49 @@ export default function SwapInterface() {
               // Add delay before sending tokens
               setTimeout(async () => {
                 await matchingEngine.tokensSent();
+                setSwappedAmount(toAmount); // Set the swapped amount when swap completes
                 setSwapStage("idle");
               }, 3000);
             }, 4000);
           }, 9500);
         }, 3000);
+
+        try {
+          console.log("🔄 Submitting intent with data:", {
+            user: address,
+            fromToken: tokenAddressMap[fromCurrency],
+            toToken: tokenAddressMap[toCurrency],
+            amount: fromAmount,
+            receive: toAmount,
+            expiryTime: new Date(Date.now() + 3 * 60 * 1000).toISOString()
+          });
+
+          // Add 3 second delay before sending the request
+          await new Promise(resolve => setTimeout(resolve, 4000));
+          console.log(".");
+
+          const response = await axios.post("http://localhost:3000/intent/submit", {
+            user: address,
+            fromToken: tokenAddressMap[fromCurrency],
+            toToken: tokenAddressMap[toCurrency],
+            amount: fromAmount,
+            receive: toAmount,
+            expiryTime: new Date(Date.now() + 3 * 60 * 1000).toISOString() // 3 minutes from now
+          });
+
+          console.log("✅ Intent submission successful:", response.data);
+        } catch (error) {
+          console.error("❌ Intent submission failed:", error);
+          if (axios.isAxiosError(error)) {
+            console.error("Axios error details:", {
+              status: error.response?.status,
+              statusText: error.response?.statusText,
+              data: error.response?.data
+            });
+          }
+          throw error; // Re-throw to be caught by the outer try-catch
+        }
+
       } else {
         console.warn("⚠️ depositTokens returned undefined.");
         await matchingEngine.depositFailed("Transaction failed to submit");
@@ -223,7 +279,12 @@ export default function SwapInterface() {
       <div className="bg-gradient-to-br backdrop-blur-sm from-[#F6411B]/5 to-yellow-500/5 rounded-3xl p-5 shadow-lg border border-[#F6411B]/20">
         {/* From Section */}
         <div className="mb-4">
-          <p className="text-[#F6411B] mb-2">From</p>
+          <div className="flex justify-between mb-2">
+            <p className="text-[#F6411B]">From</p>
+            <p className="text-[#F6411B]/70 text-sm">
+              Balance: {fromBalance?.formatted || "0.0"} {fromCurrency}
+            </p>
+          </div>
           <div className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 rounded-2xl p-4 flex items-center justify-between border border-[#F6411B]/20 hover:border-yellow-500/20 transition-colors">
             <div className="flex items-center">
               <div className={`bg-white rounded-full p-2 mr-2`}>
@@ -280,7 +341,17 @@ export default function SwapInterface() {
 
         {/* To Section */}
         <div className="mb-4">
-          <p className="text-[#F6411B] mb-2">To</p>
+          <div className="flex justify-between mb-2">
+            <p className="text-[#F6411B]">To</p>
+            <p className="text-[#F6411B]/70 text-sm">
+              Balance: {totalToBalance} {toCurrency}
+              {parseFloat(swappedAmount) > 0 && (
+                <span className="text-green-500 ml-2">
+                  (+{swappedAmount})
+                </span>
+              )}
+            </p>
+          </div>
           <div className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 rounded-2xl p-4 flex items-center justify-between border border-[#F6411B]/20 hover:border-yellow-500/20 transition-colors">
             <div className="flex items-center">
               <div className={`bg-white rounded-full p-2 mr-2`}>
